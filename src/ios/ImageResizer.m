@@ -13,6 +13,8 @@
     NSDictionary* arguments = [command.arguments objectAtIndex:0];
     NSString* imageUrlString = [arguments objectForKey:@"uri"];
     NSString* quality = [arguments objectForKey:@"quality"];
+    NSString* folderName = [arguments objectForKey:@"folderName"];
+    NSString* filename = [arguments objectForKey:@"filename"];
     CGSize frameSize = CGSizeMake([[arguments objectForKey:@"width"] floatValue], [[arguments objectForKey:@"height"] floatValue]);
 
     //Get the image from the path
@@ -63,19 +65,21 @@
     NSFileManager* fileMgr = [[NSFileManager alloc] init];
 
     // generate unique file name
-    NSString* filePath;
+    //NSString* filePath;
     NSData* data = UIImageJPEGRepresentation(newImage, [quality floatValue] / 100.0f);
-    int i = 1;
-    do {
-        filePath = [NSString stringWithFormat:@"%@/%@%03d.%@", docsPath, PROTONET_PHOTO_PREFIX, i++, @"jpg"];
-    } while ([fileMgr fileExistsAtPath:filePath]);
+    //int i = 1;
+    //do {
+        //filePath = [NSString stringWithFormat:@"%@/%@%03d.%@", docsPath, PROTONET_PHOTO_PREFIX, i++, @"jpg"];
+    //} while ([fileMgr fileExistsAtPath:filePath]);
+    NSString* filePath = [NSString stringWithFormat: @"%@%@", folderName, filename];
+    NSString* filePathParsed = [filePath componentsSeparatedByString:@"file://"][1];
 
     // save file
     CDVPluginResult* result = nil;
-    if (![data writeToFile:filePath options:NSAtomicWrite error:&err]) {
+    if (![data writeToFile:filePathParsed options:NSAtomicWrite error:&err]) {
         result = [CDVPluginResult resultWithStatus:CDVCommandStatus_IO_EXCEPTION messageAsString:[err localizedDescription]];
     } else {
-        result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:[[NSURL fileURLWithPath:filePath] absoluteString]];
+        result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:[[NSURL fileURLWithPath:filePathParsed] absoluteString]];
     }
     [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
 }
