@@ -14,7 +14,7 @@
     NSString* imageUrlString = [arguments objectForKey:@"uri"];
     NSString* quality = [arguments objectForKey:@"quality"];
     NSString* folderName = [arguments objectForKey:@"folderName"];
-    NSString* filename = [arguments objectForKey:@"filename"];
+    NSString* filename = [arguments objectForKey:@"fileName"];
     CGSize frameSize = CGSizeMake([[arguments objectForKey:@"width"] floatValue], [[arguments objectForKey:@"height"] floatValue]);
 
     //Get the image from the path
